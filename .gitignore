@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+*/migrations/__pycache__/
+january_data_rain.csv
+january_data_temp.csv
