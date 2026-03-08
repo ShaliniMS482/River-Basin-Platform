@@ -191,19 +191,19 @@ File used:
 - january_data_rain.csv
 - january_data_temp.csv
 
-- **Place Files in Project Directory**
+**Place Files in Project Directory**
 
 After downloading the files, place them in the root project directory (same location as manage.py).
 
 Example structure:
 
-river-basin-platform/
-│
-├── manage.py
-├── january_data_rain.csv
-├── january_data_temp.csv
-├── hydrology/
-├── settings.py
+    river-basin-platform/
+    │
+    ├── manage.py
+    ├── january_data_rain.csv
+    ├── january_data_temp.csv
+    ├── hydrology/
+    ├── settings.py
 
 - **Run the Ingestion Command**
 
@@ -219,19 +219,19 @@ This command will ingest both rainfall and temperature observations into the dat
 
 Example successful run:
 
-Ingestion complete
-Rows ingested: 1488
-Rows skipped: 0
-Errors: 0
+    Ingestion complete
+    Rows ingested: 1488
+    Rows skipped: 0
+    Errors: 0
 
 Example run with errors:
 
-Row error: {'datetime': 'invalid', 'value': 'abc'} | Error: Invalid datetime format
+    Row error: {'datetime': 'invalid', 'value': 'abc'} | Error: Invalid datetime format
 
-Ingestion complete
-Rows ingested: 1486
-Rows skipped: 1
-Errors encountered: 1
+    Ingestion complete
+    Rows ingested: 1486
+    Rows skipped: 1
+    Errors encountered: 1
 
 Screenshot of the execution log is included in the **submission folder** as:
 
@@ -289,54 +289,53 @@ Rainfall events are **generated only by the detection endpoint.**
 - GET	/api/events/{id}/	- Retrieve event
 - DELETE -	/api/events/{id}/ -	Delete event
 
-- **C2. Analytics / Query APIs**
+**C2. Analytics / Query APIs**
 
 **Timeseries Endpoint**
 
 Retrieve hourly rainfall or temperature observations for a basin within a date range.
 
-- GET /api/basins/{id}/timeseries?measurement_type=rainfall&from=2019-01-01&to=2019-01-31
+- GET /api/basins/{id}/timeseries/?measurement_type=rainfall&from=2019-01-01&to=2019-01-31
 
 Example response:
 
-{
-    "count": 1,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
-            "timestamp": "2019-01-01T10:00:00Z",
-            "value": 10.0,
-            "unit": "mm",
-            "event_id": null
-        },
-    ]
-}
+    {
+        "count": 1,
+        "next": null,
+        "previous": null,
+        "results": [
+            {
+                "timestamp": "2019-01-01T10:00:00Z",
+                "value": 10.0,
+                "unit": "mm",
+                "event_id": null
+            },
+        ]
+    }
 
 If the observation does not belong to a rainfall event:
 
-event_id = null
+`event_id = null`
 
 **Event Detection Endpoint**
 
 This endpoint scans rainfall observations and detects rainfall events.
 
-- POST - /api/basins/{id}/detect-events?min_dry_gap_hours=6
+- POST - /api/basins/{id}/detect-events/?min_dry_gap_hours=6
 
 Response Example
-{
-    "total_events_detected": 13,
-    "basin_id": 2,
-    "min_dry_gap_hours": 4,
-    "scan_start": "2019-01-01T00:00:00Z",
-    "scan_end": "2019-01-31T23:00:00Z"
-}
+
+    {
+        "total_events_detected": 13,
+        "basin_id": 2,
+        "min_dry_gap_hours": 4,
+        "scan_start": "2019-01-01T00:00:00Z",
+        "scan_end": "2019-01-31T23:00:00Z"
+    }
 
 **Idempotency**
 
-Before detection runs, the system deletes any previously detected events for the same: 
-
-basin + min_dry_gap_hours
+Before detection runs, the system deletes any previously detected events for the same: `basin + min_dry_gap_hours`
 
 This ensures **re-running detection does not create duplicate events.**
 
@@ -348,13 +347,14 @@ Retrieve all detected events for a basin.
 
 Response includes:
 
-start_timestamp
-end_timestamp
-duration_hours
-peak_value
-total_volume
+    start_timestamp
+    end_timestamp
+    duration_hours
+    peak_value
+    total_volume
  
 Sample response:
+
     {
         "id": 26,
         "start_timestamp": "2019-01-31T05:00:00Z",
@@ -390,14 +390,14 @@ Provides aggregated statistics across all events for a basin.
 
 Example response:
 
-{
-    "total_events": 10,
-    "mean_duration": 7.9,
-    "mean_total_volume": 0.9187411976999998,
-    "peak_event": 22,
-    "longest_event": 23,
-    "min_dry_gap_hours": "6"
-}
+    {
+        "total_events": 10,
+        "mean_duration": 7.9,
+        "mean_total_volume": 0.9187411976999998,
+        "peak_event": 22,
+        "longest_event": 23,
+        "min_dry_gap_hours": "6"
+    }
 
 **Event Detection Algorithm**
 
@@ -433,7 +433,8 @@ This approach efficiently detects **maximal contiguous rainfall** sequences sepa
 
 **Idempotency**
 
-Before inserting newly detected events, existing events for the same:(basin, min_dry_gap_hours) are removed. This ensures that re-running the detection process produces consistent results without duplicate events.
+Before inserting newly detected events, existing events for the same:
+(basin, min_dry_gap_hours) are removed. This ensures that re-running the detection process produces consistent results without duplicate events.
 
 **Performance**
 
@@ -450,6 +451,7 @@ Default page size: 20 records per page
 Example: GET /api/events/?page=2
 
 **Search / Filters**
+
 Basin filters: id, name
 
 Observation filters: measurement_type, date range, value greater than, value less than
@@ -460,7 +462,7 @@ Event filters: basin, min_dry_gap_hours, min_total_volume, date range
 
 All endpoints can be tested using the provided Postman collection.
 
-Location: postman/river_basin_api_collection.json
+Location: `postman/river_basin_api_collection.json`
 
 Import this file into Postman to access pre-configured API requests.
 
@@ -478,7 +480,7 @@ The following endpoints are cached.
 
 Returns hourly observations for a basin within a date range.
 
-- GET /api/basins/{id}/timeseries
+- GET /api/basins/{id}/timeseries/
 
 Cache key format:
 
@@ -530,3 +532,19 @@ When either operation occurs, all cache keys related to the basin are cleared. T
 **Redis Setup**
 
 Start the Redis server before running the application: redis-server
+
+5. **Testing and Code Quality (Part E)**
+
+The project includes unit tests implemented using **pytest and pytest-django**.
+
+Coverage includes:
+- Event detection logic
+- Timeseries API responses
+- CSV ingestion idempotency
+- Event re-detection idempotency
+
+**Run the full test suite with:**
+
+```bash
+pytest
+```
