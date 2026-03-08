@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'river_basin_platform.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hydrology_db',
-        'USER': 'root',
-        'PASSWORD': '198A129n9@13s',
+        'NAME': 'your_db',
+        'USER': 'you_user_name',
+        'PASSWORD': 'your_password',
         'HOST': 'localhost',
         'PORT': '3306',
     }
